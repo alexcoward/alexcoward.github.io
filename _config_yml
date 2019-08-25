@@ -1,2 +1,3 @@
 name: Alexander Coward
 markdown: kramdown
+permalink: /blog/:year/:month/:day/:title
