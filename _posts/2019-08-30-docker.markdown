@@ -7,4 +7,37 @@ categories: jekyll update
 
 Fiddled around with docker today and completed the CIT160 lab.
 
+I found that the docker toolbox was the easiest way for me to use docker on Windows,
+it was nice beacuse it used VirtualBox to create a unix based virtual machine 
+that convienantly had all the binaries installed that i need to complete the lab
+(git, ssh, etc.).
+
+I first installed the CIT160 container on my laptop using scp - built the container,
+and next created a container named cit160 and mounted it a folder on my laptop for
+easy access to files inside the container.
+
+{% highlight ruby %}
+
+scp <UID>@ssh.sandbox.csun.edu:~steve/cit160/etc/dockerfile . // Grab the dockerfile from ~steve/...
+docker build -t cit160 etc // Build the container image
+docker create --name cit160 --interactive --tty \ 
+              --volume ~/cit160:/mnt/laptop-cit160 cit160 // Create the container and mount point
+
+{% endhighlight %}
+
+I learned some very nice commands for future use in the docker environment.
+
+{% highlight ruby %}
+
+docker start <container name> // To start a container
+docker exec -it <container name> /bin/bash // To start a bash shell on a container
+docker stop <container name> // To stop a container
+docker exec -it <container name> login // To login into a container as a regular user
+docker ps -a // List all containers
+
+
+{% endhighlight %}
+
+
+
 [Back]({{ site.url }}/)
