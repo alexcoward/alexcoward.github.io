@@ -6,6 +6,8 @@ date:   2019-08-30 11:38:49 -0700
 
 Fiddled around with docker today and completed the CIT160 lab.
 
+<!--break-->
+
 I found that the docker toolbox was the easiest way for me to use docker on Windows,
 it was nice beacuse it used VirtualBox to create a unix based virtual machine 
 that convienantly had all the binaries installed that i need to complete the lab
