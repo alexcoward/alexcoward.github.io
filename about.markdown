@@ -1,7 +1,14 @@
 ---
-layout: default
+layout: page
 title: About
 permalink: /about/
 ---
 
-I am a student in CIT480.
+
+### 💻 A Little Bit About Myself
+> My name is Alex Coward and I am an enterprise application developer. 
+
+<br><br>
+
+------------------------
+alexcoward August 2019
