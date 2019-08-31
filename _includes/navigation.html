@@ -1,0 +1,38 @@
+<!--five different styles
+1. from gem jekyll-theme-hacker, via its default layout  
+2. from classes in file assets/css/main.scss as link
+3. from classes in file assets/css/main2.scss as import in style tags below
+4. from classes in style tags below
+5. from inline style attributes style="attribute:value"
+-->
+<link rel="stylesheet" href="{{'/assets/css/main.css'| relative_url}}">
+
+<style>
+@import "/assets/css/main2.css";
+
+.header_navigation a:active {
+  background-color: rgba(160,160,0,100);
+  color: white;
+}
+</style>
+
+
+<div>
+  <nav id="header_navigation" class="header_navigation">
+    {% for item in site.data.navigation %}
+    <a href="{{ item.link }}" 
+       {% if page.url == item.link %}
+       style="color: green;" 
+       {% endif %}>
+      {{item.name}}
+    </a>
+
+    {% endfor %}
+  </nav>
+</div>
+
+<!--needed to break the float:left after the navi buttons-->
+<div style="clear:both;"></div>
+
+<p>page.url: {{ page.url }}</p>
+

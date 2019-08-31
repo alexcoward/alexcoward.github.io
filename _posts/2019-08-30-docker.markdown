@@ -1,8 +1,7 @@
 ---
-layout: default
+layout: post
 title:  "Docker Lab!"
 date:   2019-08-30 11:38:49 -0700
-categories: jekyll update
 ---
 
 Fiddled around with docker today and completed the CIT160 lab.
@@ -37,7 +36,3 @@ docker ps -a // List all containers
 
 
 {% endhighlight %}
-
-
-
-[Back]({{ site.url }}/)
