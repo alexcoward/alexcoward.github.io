@@ -4,7 +4,7 @@ title:  "Docker Lab!"
 date:   2019-08-30 11:38:49 -0700
 ---
 
-Fiddled around with docker today and completed the CIT160 lab.
+## Fiddled around with docker today and completed the CIT160 lab.
 
 <!--break-->
 
@@ -26,7 +26,9 @@ docker create --name cit160 --interactive --tty \
 
 {% endhighlight %}
 
-I learned some very nice commands for future use in the docker environment.
+<br><br>
+
+## I also learned some very nice commands for future use in the docker environment.
 
 {% highlight ruby %}
 
