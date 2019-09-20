@@ -1,0 +1,79 @@
+---
+layout: post
+title:  "Ansible Lab!"
+date:   2019-09-19 16:44:50 -0700
+---
+
+## Completed lab2 and created my first Ansible playbook.
+
+<!--break-->
+
+This was my first programmatic experience with Ansible, despite hearing about
+Ansible from work colleagues.
+
+### I learned some very useful stuff!
+
+1: Array variables can be declared with the following syntax
+
+{% highlight ruby %}
+
+core_packages: ['traceroute', 'sudo', 'vim', 'git', 'curl', 'zip', 'apache2', 'mysql-client', 'software-properties-common', 'ansible']
+php_packages: ['php', 'libapache2-mod-php', 'php-mysql', 'php7.2-cli', 'php7.2-curl', 'php7.2-gd', 'php7.2-mbstring', 'php7.2-mysql', 'php7.2-xml']
+	
+{% endhighlight %}
+
+2: Arrays' may be accessed by the following syntax:
+
+{% highlight ruby %}
+
+"{{ "{{ core_packages " }}}}"
+"{{ "{{ php_packages " }}}}"
+	
+{% endhighlight %}
+
+3: Lists' in Ansible are declared like this 'with_items' and accessed though "{{ "{{ item " }}}}":
+
+{% highlight ruby %}
+
+- name: add users to cit480
+    user:
+       name: "{{ "{{ item " }}}}"
+       groups: cit480
+       state: present
+    with_items:
+       - bob
+       - jimmy
+
+{% endhighlight %}
+
+4: Ansible has some pretty cool modules we can use in our playbook to help automate deployments to our hosts.
+
+{% highlight ruby %}
+
+ apt: to manage package installation
+ copy: to copy files
+ group: to add groups
+ user: to add users
+ file: to modify file attributes such as ownership
+ lineinfile: to add text to a file
+ apt_repository: to add a new repo to apt-get
+ git: to clone git repos
+ shell: to execute commands in the shell on the remote host
+ service: to manage system services on a remote host (start or stop a service)
+ 
+{% endhighlight %}
+
+<br><br>
+
+## Some helpful info about the ansible-playbook command
+
+{% highlight ruby %}
+
+ansible-playbook [options] playbook.yml [playbook2 ...]
+
+----------------flags------------------
+
+--syntax-check | to check the syntax of the yml file
+--check | don’t make any changes; instead, try to predict some of the changes that may occur
+
+{% endhighlight %}
