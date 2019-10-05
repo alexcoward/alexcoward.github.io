@@ -1,0 +1,80 @@
+---
+layout: post
+title:  "Project 0!"
+date:   2019-10-03 15:45:50 -0700
+---
+
+## Project 0 This Week.
+
+<!--break-->
+
+So my group of two begain project0 this week and we either began or accomplished the following tasks
+I will only briefly list items as you may visit our repo/website to see the action items for yourself!
+
+### How's the project coming along?
+
+1: Setting up GitHub repo
+[https://github.com/alexcoward/Project0](https://github.com/alexcoward/Project0)
+
+2: Setting up GitHub project (two week sprint)
+[https://github.com/alexcoward/Project0/projects](https://github.com/alexcoward/Project0/projects)
+
+3: I got us a domain name from freenom.com
+[https://teamaerialcsun.gq/](https://teamaerialcsun.gq/)
+
+4: Set up our EC2 Instance
+
+5: Added A record's to Route53 for our website
+
+6: Setup IAM to allow group members to connect to the server without sharing ssh keys
+
+7: Generated and installed certificate for our domains using Certbot [https://certbot.eff.org/](https://certbot.eff.org/) from [https://letsencrypt.org/](https://letsencrypt.org/)
+
+8: Setup a secrets repo in GutHub for storage of keys (SSL cert)
+
+9: Started on documenting the above action items using a GitHub Wiki
+
+It was a busy week as you can see!!
+
+
+<br><br>
+
+## Some helpful commands I learned
+
+1: You can add these lines of code to your virtualhost file to permanently redirect users to the HTTPS version
+of your website using the apache2 rewrite module
+
+{% highlight ruby %}
+
+RewriteEngine on
+RewriteCond %{SERVER_NAME} =teamaerialcsun.gq [OR]
+RewriteCond %{SERVER_NAME} =www.teamaerialcsun.gq
+RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+
+{% endhighlight %}
+
+2: You must enable the rewrite module however or apache2 will fail to load
+
+{% highlight ruby %}
+
+sudo a2enmod rewrite
+
+{% endhighlight %}
+
+3: I also learned that you can setup Ansible to push a ssh public key to a GitHub secrets repo this will essentially
+allow you to automate cloning the private repo 
+
+{% highlight ruby %}
+
+- name: add a new read-only deploy key to a GitHub repository using basic authentication
+    github_deploy_key:
+      owner: ""
+      repo: ""
+      name: ""
+      key: "/path/to/generated/privatekey"
+      read_only: yes
+      username: ""
+      password: ""
+      otp: "" // a six digit one time code
+
+{% endhighlight %}
