@@ -1,0 +1,96 @@
+---
+layout: post
+title:  "Jenkins Warnings NextGen Plugin"
+date:   2019-11-14 10:08:37 -0700
+---
+
+## Jenkins Warnings NextGen Plugin!
+
+<!--break-->
+
+Jenkins is a Java based program that usually runs on a server, Jenkins offers a company the ability to continuously integrate developers code changes 
+into a single "pipeline" if you will. Jenkins is usually setup to then automatically build, test and deploy the code or even fully a compiled program
+to a location chosen by the company. There are many plugins that can be added to Jenkins to increase its usefullness. 
+
+### One or my favorite plugins for Jenkins is the Warnings Next Generation plugin.
+
+The Jenkins Next Generation Warnings plugin collects compiler warnings or issues reported by static analysis tools and visualizes the results. 
+It has built-in support for more than hundred report formats. Among the problems it can detect:
+
+* errors from your compiler (C, C#, Java, etc.)
+* warnings from a static analysis tool (CheckStyle, StyleCop, SpotBugs, etc.)
+* duplications from a copy-and-paste detector (CPD, Simian, etc.)
+* vulnerabilities
+* open tasks in comments of your source files
+
+### How do we use the Warnings NextGen Plugin?
+
+* Note: For this example I will be using the scripted pipeline instead of a delcarative pipeline. I will also use SwiftLint to scan a swift project and generate the scan artifact.
+
+* Also, I have left out some parts of the process. This article will only go over the basics of how to use the Warnings NextGen plugin.
+
+1: First we must install the plugin by navigating to Jenkins Plugin manager then searching for and installing the Warnings Next Generation Plugin.
+Next, restart the server to make the program available.
+
+2: The warnings next generation is a tool to parse and deploy the results of a static analysis scan (in our case an .xml document) to your Jenkins
+server. The plugin will give you a visual representation of the errors, mistakes, etc. in your program. So next we need to choose a static analysis tool,
+lets pick: SwiftLint a tool for checking Swift Syntax. We need to install Swiftlint on our build agent(s) first though.
+
+{% highlight ruby %}
+
+brew install swiftlint
+
+{% endhighlight %}
+
+3: Once we have SwiftLint installed we need to add a lane in fastlane to call SwiftLint.
+
+{% highlight ruby %}
+
+desc "Run SwiftLint"
+lane :analysis do
+	swiftlint(
+		mode: :lint,                            # SwiftLint mode: :lint (default) or :autocorrect
+		executable: "Pods/SwiftLint/swiftlint", # The SwiftLint binary path (optional). Important if you've installed it via CocoaPods
+		path: "/path/to/lint",                  # Specify path to lint (optional)
+		output_file: "swiftlint.result.xml",   # The path of the output file (optional)
+		reporter: "xml",                       # The custom reporter to use (optional)
+		config_file: ".swiftlint-ci.yml",       # The path of the configuration file (optional)
+		files: [                                # List of files to process (optional)
+			"AppDelegate.swift",
+			"path/to/project/Model.swift"
+		],
+		ignore_exit_status: true,               # Allow fastlane to continue even if SwiftLint returns a non-zero exit status (Default: false)
+		quiet: true,                            # Don't print status logs like 'Linting ' & 'Done linting' (Default: false)
+		strict: true                            # Fail on warnings? (Default: false)
+	)
+end
+
+{% endhighlight %}
+
+3: Then to call our lane from our Jenkinsfile we can run:
+
+{% highlight ruby %}
+
+sh "fastlane analysis"
+
+{% endhighlight %}
+
+4: In the above example after our lane runs, we will generate an artifact from our scan of AppDelegate.swift and ... and that artifact will be called 
+swiftlint.result.xml. We next want to publish swiftlint.result.xml to our Jenkins server. To do this we use the Warnings NextGen plugin
+we installed earlier. (Assuming you are in the Jenkins working directory)
+
+{% highlight ruby %}
+
+ stage ('Analysis') {
+	def swiftlint = scanForIssues tool: swiftLint(pattern: 'swiftlint.result.xml')
+	publishIssues issues: [swiftlint]
+ }
+ 
+{% endhighlight %}
+
+5: After our stage has run, we should be able to navigate to the Jenkins page for our build and we should see a icon for SwiftLint, if we click on that icon 
+we should be able to see any syntax issues we have in our project. We should also see a graph of the errors/warnings show up on our projects Jenkins page.
+
+6: It is important to note that the Next Generation Warnings plugin requires both a unique build number AND a unique build display name for EACH
+build you do. So you want to make sure that if you are versioning your project, each build on Jenkins MUST have a different display name. If you fail
+to meet this requirement, you will notice that you will no longer see graphs and charts on your Jenkins project page.
