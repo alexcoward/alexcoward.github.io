@@ -1,0 +1,69 @@
+---
+layout: post
+title:  "Jenkins Secrets"
+date:   2020-01-30 10:10:45 -0700
+---
+
+## Jenkins Secrets!
+
+<!--break-->
+
+When working with Jenkins we may need to find a secure way to store and retrieve secrets such as 
+username and password combinations, tokens, and certificates to authenticate or sign a digital 
+file. This post will detail how to retrieve secrets stored as credentials inside Jenkins and use
+these secrets within a scripted pipeline.
+
+Luckily with Jenkins we can use a nice plugin called the Credentials Binding plugin!
+[Jenkins Plugin Link](https://plugins.jenkins.io/credentials-binding)
+With this plugin we may:
+* Allow credentials to be bound to environment variables for use from miscellaneous build steps
+* Mask secrets from being visible in most logs through stdout
+
+### How to use the Credentials Binding plugin
+
+1: First, we must upload or enter our secret into Jenkins (example using a username password combo)
+
+{% highlight ruby %}
+
+Click on System
+Click on Clobal Credentials
+Click on Add Credentials
+For scope choose global because these credentials are for a pipeline
+For kind choose Username and Password
+Enter the username and enter the password
+Leave the ID blank (if you prefer), Jenkins will autogenerate a unique ID for you!
+Enter a description so you know what this password is for later
+Click Ok
+
+{% endhighlight %}
+
+2: Bind our previously entered credentials to environmental variables to be used in our
+scripted pipeline
+
+{% highlight ruby %}
+
+stage('credentials'){
+  withCredentials([usernamePassword(credentialsId: '7b274a40-4533-4d2d-a37f-917d5b785e97', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+    // Now within this block we may use '$USERNAME' and '$PASSWORD' when we need them
+    // note: Single quotes prevent Groovy interpolation; expansion is by Bourne Shell, which is what you want	
+}
+
+{% endhighlight %}
+
+3: If you were to try and print out $USERNAME or $PASSWORD
+
+{% highlight ruby %}
+
+stage ('echo variables') {
+  sh(''echo User: '$USERNAME'' && 'echo Pass: '$PASSWORD''')
+}
+
+You will get this as stdout when you view the Jenkins build logs:
+
+echo User: ****
+echo Pass: ****
+
+{% endhighlight %}
+
+4: Note that your credentials are still exploitable by a bad actor! Do not share credentials with an untrused pipeline period!
+Do not allow unrestricted access to your build agents either!
