@@ -1,0 +1,105 @@
+---
+layout: post
+title:  "Cheap Static JSON file"
+date:   2020-02-06 07:38:45 -0700
+---
+
+## Static JSON Files
+
+<!--break-->
+
+Often times you may need to host some static files online that need to be accessed and used by some application.
+However, maybe you don't want to host your own web-server. Well enter AWS S3 or Amazon's Simple Storage Service!
+With S3 we can:
+* Easily host our static content 
+* Get a web addressable reference to out static content
+* Generate a custom object ACL for items in our S3 bucket (public access or private access)
+
+### How To Host A JSON In A S3 Bucket
+
+1: First, we need to create our bucket
+
+{% highlight ruby %}
+
+Log into the AWS console
+Go to S3 service
+Click create bucket
+Give your bucket a unique name
+You will want to turn OFF block all public access if you want external applications to access files in your bucket
+
+
+{% endhighlight %}
+
+2: Now we need to create our JSON file (for simplicity I have provided one below) This JSON has an array of 6
+of my favorite websites. The JSON object favoriteWebsites contains an array of 6 objects, each with a name and url key value pair.
+We can name our file favoriteWeb.json for example
+
+{% highlight ruby %}
+
+{
+  "favoriteWebsites": [
+    {
+      "name": "Google",
+      "url": "https://www.google.com"
+    },
+    {
+      "name": "Youtube",
+      "url": "https://www.youtube.com"
+    },
+    {
+      "name": "eBay",
+      "url": "https://www.ebay.com"
+    },
+    {
+      "name": "WranglerForum",
+      "url": "https://www.jlwranglerforums.com"
+    },
+    {
+      "name": "Amazon",
+      "url": "https://www.amazon.com"
+    },
+    {
+      "name": "Reddit",
+      "url": "https://www.reddit.com"
+    }
+  ]
+}
+
+
+{% endhighlight %}
+
+3: Now we upload our file (favoriteWeb.json) to the S3 bucket we just created above using the file picker. Making sure that we allow public
+READ access only for our file permissions. After uploading we will get a nice URL to access our JSON file.
+
+{% highlight ruby %}
+
+https://alexjsontestbucket.s3-us-west-2.amazonaws.com/favoriteWeb.json
+
+{% endhighlight %}
+
+4: Next, we can test our endpoint in our browser
+
+[https://alexjsontestbucket.s3-us-west-2.amazonaws.com/favoriteWeb.json](https://alexjsontestbucket.s3-us-west-2.amazonaws.com/favoriteWeb.json)
+
+5: Now we can parse elements of the JSON using a loop to grab our favorite websites
+* In Python
+
+{% highlight ruby %}
+
+import urllib.request, json
+
+with urllib.request.urlopen("https://alexjsontestbucket.s3-us-west-2.amazonaws.com/favoriteWeb.json") as url:
+    data = json.loads(url.read().decode())
+    for website in data['favoriteWebsites']:
+        print(website['url'])
+		
+Output from above code:
+
+https://www.google.com
+https://www.youtube.com
+https://www.ebay.com
+https://www.jlwranglerforums.com
+https://www.amazon.com
+https://www.reddit.com
+		
+{% endhighlight %}
