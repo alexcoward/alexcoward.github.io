@@ -1,0 +1,58 @@
+---
+layout: post
+title:  "Common Vulnerabilities and Exposures"
+date:   2020-02-20 11:48:45 -0700
+---
+
+## About CVE's
+
+<!--break-->
+
+Whether you are using Nessus Security Center to scan a network for vulnerabilities, or using open source libraries on Github
+it is important to know a little but about CVE's....
+
+Common vulnerabilities and exposures, or a CVE for short are unique, common identifiers for publicly known information-security vulnerabilities 
+in publicly released software packages.
+
+CVE's are contained in a system which is currently maintained by the MITRE Corporation.
+
+CVE's have several important attributes among them are;
+* Entry Creation Date (The date the entry was created)
+* CVE-ID (The unique ID for the vulnerability)
+* Assigning CNA (An organization that can assign and announce CVE entries within a particular scope)
+* Description (A brief explanation of the vulnerability)
+* Reference (Usually a link to additional information on the vulnerability, which may include workarounds, etc.)
+
+### How can we find more information about a CVE?
+
+1: We can go to MITRE's CVE website which maintains the database of CVE's. Here you would need to input the name of the CVE to see more info,
+[https://cve.mitre.org](https://cve.mitre.org)
+
+*Example to search for a known Microsoft Internet Explorer CVE
+[https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-0674](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-0674)
+
+
+2: We can call a REST API. The nice things about this API is that it gives you alot of data including possible solutions.
+
+{% highlight ruby %}
+
+curl https://cve.circl.lu/api/cve/CVE-2020-0674
+
+{% endhighlight %}
+
+3: We can check open source code on GitHub for GitHub Security Advisories. Click on the "Security" tab at the root of the repository.
+* Remember though, this is only useful if the repository owner has reported the security advisory...
+
+*Example to search all advisories 
+[https://github.com/advisories](https://github.com/advisories)
+
+*Example of an advisory 
+[https://github.com/dojo/dojox/security/advisories](https://github.com/dojo/dojox/security/advisories)
+
+### A few things can we do to mitigate our exposure due to CVE's?
+
+Develop a security policy to among other things:
+
+1: Keep your software and operating systems up to date and patched  
+2: Limit your systems exposure to attackers  
+3: Scan your system for vulnerabilities regularly (Nessus Essentials is a great tool for home use) [https://www.tenable.com/products/nessus/nessus-essentials](https://www.tenable.com/products/nessus/nessus-essentials)  
