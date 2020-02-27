@@ -1,0 +1,75 @@
+---
+layout: post
+title:  "Transport Layer Security and Apache2"
+date:   2020-02-27 11:48:45 -0700
+---
+
+## What is TLS 1.2
+
+<!--break-->
+
+According to RFC5246 the TLS 1.2 protocol provides communications security over the Internet.  The protocol allows client/server applications to communicate in a 
+way that is designed to prevent eavesdropping, tampering, or message forgery.
+
+TLS protocol is composed of two layers:  
+* A TLS Record protocol  
+* A TLS Handshake protocol
+
+In this blog post I will explain a little bit about the initial stage of the handshake protocol.
+
+Basically, at very high level first steps of the TLS handshake require the client and server to share their capabilities. This is so that both client and server
+can find the cryptographic features they mutually support. These cryptographic features are called ciphers. After they agree on a cipher, then communications 
+can begin.
+
+In Apache2 we can control which ciphers are used server side by modifying the cipher suite. This is important because the default cipher suite often contains
+ciphers which are weak. It should also be noted that the default Apache2 config supports outdated TLS protocols like TLS1.0 and TLS1.1 and even SSL. If we use
+insecure ciphers we may lose privacy with regards to communications from server to client. 
+
+In the following blog post we will:
+* Modify Apache2 to only accept TLS1.2
+* Modify the cipher suite to support only strong encryption ciphers
+
+Note: I will assume you already have enabled mod_ssl and have the proper.conf files present as well as valid server certs in place.
+
+### Modifying Apache2 to be more secure (TLS1.2 + ciphers) 
+
+1: First we need to find our .conf file and add support for TLS1.2
+
+
+{% highlight ruby %}
+// Add this line to our security.conf file this to ONLY allow TLS1.2 no other SSL ot TLS methods will be supported
+SSLProtocol TLSv1.2
+
+{% endhighlight %}
+
+
+2: Now we can choose our cipher suite preferences for TLS1.2 for this example we will only allow the strongest ciphers
+
+{% highlight ruby %}
+// Add this line to the security.conf file below the above line to ONLY allow the strongest ciphers 
+SSLCipherSuite HIGH:!aNULL:!MD5
+
+{% endhighlight %}
+
+3: If you want to support multiple cipher types in the order presented in the SSLCipherSuite directive server side you could do this. As
+normally the client's preference is used. If this directive is enabled, the server's preference will be used instead.
+
+{% highlight ruby %}
+
+SSLCipherSuite RC4-SHA:AES128-SHA:HIGH:!aNULL:!MD5
+SSLHonorCipherOrder on 
+
+{% endhighlight %}
+
+4: Remember to restart apache2 for your changes to take effect
+
+{% highlight ruby %}
+
+sudo service apache2 restart
+
+{% endhighlight %}
+
+5: Navigate to SSL labs to test your configuration! Shoot for an A+ rating.
+[https://www.ssllabs.com/ssltest/](https://www.ssllabs.com/ssltest/)
+
+
