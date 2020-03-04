@@ -1,0 +1,94 @@
+---
+layout: post
+title:  "Principle Of Least Privilege"
+date:   2020-03-03 11:50:45 -0700
+---
+
+## The Principle Of Least Privilege
+
+<!--break-->
+
+In this blog post I will explain a little bit about the principle of least privilege and how we can apply the principle to a Linux process,
+(Confluence in this example). 
+
+Simply put, the Principle Of Least Privilege states that, each part of the system (a program or a user) should be given only the privileges it needs to 
+perform its normal duties and nothing more. That way, if one part of the system is compromised, the damage will be limited.
+
+Many programs run on non-privileged ports (or ports > 1023) thus, many of these processes do not need to be running with root permissions.
+
+One such program is Confluence as it runs on port 8090. A dedicated user should be created to run Confluence, because Confluence runs as the user it is invoked under 
+and therefore can potentially be abused. 
+
+The general process to allow a program to run with non root permissions is as follows:
+* Create a dedicated system user account who will run the process and own the files needed by the process
+* Change permissions of the folders/files needed by the process
+* Start the process from the dedicated system user account
+
+### Confluence Running As A Service (Non-Root) 
+
+1: First we need to create a system user account for a "confluence" user
+
+
+{% highlight ruby %}
+
+sudo /usr/sbin/useradd --create-home --comment "Account for running Confluence" --shell /bin/bash confluence
+
+* Optional:
+// We may also create a group called confluence as well
+sudo /usr/sbin/groupadd confluence
+
+// Add the confluence user to the group
+sudo usermod -aG confluence confluence
+
+{% endhighlight %}
+
+
+2: Next we need to change the permissions of the confluence home folder and the installation folder
+
+{% highlight ruby %}
+
+// Change ownership of Confluence home directory recursively 
+chown -R confluence /var/atlassian
+
+// Change mode of Confluence home directory recursively to allow user read, write and execute permissions and remove groups and others access
+chmod -R u=rwx,go-rwx /var/atlassian
+
+// Confluence installation folder recursively
+chown -R confluence /opt/atlassian
+
+// Change mode of Confluence home directory recursively to allow user read, write and execute permissions and remove groups and others access
+chmod -R u=rwx,go-rwx /opt/atlassian
+
+* Optional:
+// Change the group of the folders as well
+chgrp -R confluence /opt/atlassian
+chgrp -R confluence /var/atlassian
+
+{% endhighlight %}
+
+3: Verify folder permissions using ls -al
+
+{% highlight ruby %}
+
+// Installation Directory: /opt/atlassian/confluence
+drwx------ 14 confluence root 4096 Feb 20 17:34 confluence
+
+// Home Directory: /var/atlassian/application-data/confluence
+drwx------ 3 confluence root 4096 Feb 20 17:34 application-data
+
+{% endhighlight %}
+
+4: Start Confluence from the /opt/atlassian/bin folder as our "confluence" user
+
+{% highlight ruby %}
+
+sudo su confluence 
+
+./start-confluence.sh
+
+{% endhighlight %}
+
+5: Use ps -ef to verify process running as non-privileged user, you should now notice the "user" column for the 
+Conluence process should indicate "confluence" vs. "root".
+
+
