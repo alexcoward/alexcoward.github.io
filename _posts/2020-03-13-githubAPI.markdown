@@ -41,7 +41,7 @@ curl -v -H "Authorization: token TOKEN" https://api.github.com/repos/{org}/{repo
 
 {% endhighlight %}
 
-5: Many API methods take optional parameters. For GET requests, any parameters not specified as a segment in the path can be passed as an HTTP query string parameter
+4: Many API methods take optional parameters. For GET requests, any parameters not specified as a segment in the path can be passed as an HTTP query string parameter
 
 {% highlight ruby %}
 
@@ -51,7 +51,7 @@ curl -i "https://api.github.com/repos/vmg/redcarpet/issues?state=closed"
 
 {% endhighlight %}
 
-6: To download a file from a public repo
+5: To download a file from a public repo
 
 {% highlight ruby %}
 
