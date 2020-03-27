@@ -1,0 +1,56 @@
+---
+layout: post
+title:  "Securing Tomcat"
+date:   2020-03-27 06:50:50 -0700
+---
+
+## Securing A Tomcat Connector
+
+<!--break-->
+
+Tomcat is a very popular Java Servlet used by many Java applications. In case you didnt know, Yes! Tomcat supports the HTTPS protocol. 
+
+### When properly configured, an HTTPS connection guarantees three things:  
+
+1:Confidentiality. The visitor’s connection is encrypted, obscuring URLs, cookies, and other sensitive metadata.  
+
+2:Authenticity. The visitor is talking to the “real” website, and not to an impersonator or through a “man-in-the-middle”.  
+
+3:Integrity. The data sent between the visitor and the website has not been tampered with or modified.  
+
+
+### A plain HTTP connection can be easily monitored, modified, and impersonated
+
+In this blog post I will show you how to configure and secure a tomcat connector.
+
+### General Info
+
+* We will assume the Tomcat connector is bound to port 8443  
+* Please do not use TLSv1, it is depricated  
+* You will need to find the path to your server.xml file  
+* This applies to Tomcat 7  
+* I will ignore defining the cipher suite in this post  
+
+## How To Secure Tomcat
+
+1: Locate your server.xml file on your file system and create a connector as shown below:
+
+{% highlight ruby %}
+
+<!-- Define an SSL Coyote HTTP/1.1, JSSE BIO implementation, Connector on port 8443 -->
+<Connector
+   protocol="org.apache.coyote.http11.Http11Protocol" // The protocol used by the connector
+   port="8443" // The port used by the connector
+   maxThreads="200" // The maximum number of threads allowed to run at any given time
+   scheme="https" // Set this attribute to the name of the protocol you wish to have returned by calls to request.getScheme(). For example, you would set this attribute to "https" for an SSL Connector. The default value is "http"
+   secure="true" // Set this attribute to true if you wish to have calls to request.isSecure() to return true for requests received by this Connector (you would want this on an SSL Connector)
+   SSLEnabled="true" // Enable SSL
+   SSLCertificateFile="/full/path/to/crt/file" // The full path to the SSL cert
+   SSLCertificateKeyFile="/full/path/to/pem/file" // The full path to the cert private key
+   SSLVerifyClient="require" // By setting "SSLVerifyClient" to "require", client authentication is enabled.
+   SSLProtocol="TLSv1.1+TLSv1.2"/> // The version of the SSL protocol to use. If not specified, the default is "TLS"
+
+{% endhighlight %}
+
+
+2: Check your site using [https://www.ssllabs.com/ssltest/](https://www.ssllabs.com/ssltest/) aim for an A+ rating!
