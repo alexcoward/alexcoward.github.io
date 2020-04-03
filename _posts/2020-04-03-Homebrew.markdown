@@ -1,0 +1,109 @@
+---
+layout: post
+title:  "Homebrew"
+date:   2020-04-03 10:50:50 -0700
+---
+
+## Homebrew Package Manager
+
+<!--break-->
+
+If you have not heard of Homebrew before. Please read on for a quick intro to what 
+is, in my opinion, probably the best package manager available for macOS!!  
+
+### What does homebrew do? 
+
+Homebrew is a open source package management system that simplifies the installation of software on Apple’s macOS operating system. Homebrew
+can of course also easily manage the update and removal of software installed using the brew command.
+
+Homebrew installs packages to their own directory and then symlinks their files into /usr/local.
+
+It is important to note that Homebrew is written in the Ruby programming language and targets the version of Ruby that
+comes installed with the macOS operating system, which may be different than the latest version of Ruby.... 
+
+
+### Homebrew Use Case
+
+Well, you could use Homebrew to install multiple programs on your macOS for example:
+
+* nginx - A well known web server
+* xctool - A tool for building xcode projects
+* certbot - A tool to obtain certs from Let's Encrypt and autoenable HTTPS
+* fastlane - A tool to build and release mobile apps
+
+Then you can manage these programs using brew, such that when you need to update the programs, you can do so usually with two simple commands.
+
+A complete list of programs available via Homebrew are available here [https://formulae.brew.sh/formula/](https://formulae.brew.sh/formula/)  
+
+## How To Use Homebrew
+
+1: Installing Homebrew via command line
+
+{% highlight ruby %}
+
+// Install Mac command line developer tools first
+xcode-select --install
+
+// Simply follow the interactive prompts
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+{% endhighlight %}
+
+
+2: In order to download and install a program using Homebrew
+
+{% highlight ruby %}
+
+// Install packages listed above
+brew install nginx fastlane certbot xctool
+
+{% endhighlight %}
+
+3: You many need to check your system for potential conflicts 
+
+{% highlight ruby %}
+
+// Check for OS problems
+brew doctor
+
+{% endhighlight %}
+
+4: In order to update ALL programs
+
+{% highlight ruby %}
+
+// Retreive latest version of homebrew and formula, and then upgrade all outdated and unpinned brews
+brew update && brew upgrade
+
+{% endhighlight %}
+
+5: You can also update just one program
+
+{% highlight ruby %}
+
+// Retreive latest version of homebrew and formula, and then upgrade ONLY nginx brew
+brew update 
+brew upgrade nginx
+
+{% endhighlight %}
+
+6: You can uninstall programs tool
+
+{% highlight ruby %}
+
+// Uninstall nginx brew
+brew uninstall nginx
+
+{% endhighlight %}
+
+7: We can also cleanup ALL old outdated formulae, or one specific programs formulae
+
+{% highlight ruby %}
+
+// Cleanup all outdated formulae
+brew cleanup 
+
+// Cleanup one specific formulae
+brew cleanup nginx
+
+{% endhighlight %}
