@@ -1,0 +1,71 @@
+---
+layout: post
+title:  "Updating MacOS Via CLI"
+date:   2020-04-17 08:50:50 -0700
+---
+
+## How To Update MacOS Via Command Line Interface
+
+<!--break-->
+
+Of course MacOS has a nice GUI, but sometimes we need to have more flexibility with our systems. For example, some people manage hardware
+running MacOS remotely. This means that the system administrator must be able to manage the system remotely, for example, by applying software 
+patches on a system that is not in front of him/her. Fortunately there are two nice out-of-the-box options in which you can do this on a Mac, VNC or SSH.
+Perhaps you want a headless system, scratch VNC then... Well fortunately, (out-of-the-box) that leaves you one solution, SSH. But alternatively, perhaps
+you just want to manage your own system via command line, well then this post is for you.
+
+In this blog post I detail how you can install patches to your MacOS system via command line interface.
+
+### Some details first:
+* The following command will download a fresh .pkg file which contains system updates/patches and/or application updates/patches
+* After the update has been downloaded and verified, the system will reboot
+* For OS updates, I have noticed that your system will be unavailable for up to 30 minutes while the updates are applied this means that you will not be able to SSH or VNC into the system during that time. After the restart process has completed, you will then be able to connect
+
+### My Experience
+
+Using command line to update mac seems to be much better than using software update through the GUI. Using the GUI I have had multiple
+hang-ups on reboot. Where for example, the system would become unstable and not fully boot, thus I could not connect to the computer 
+and had to manually reboot. This is a major problem if the hardware is not physically located beside me.
+
+Mac also both downloads and installs updates in the background automatically (if you allow them that is). Sometimes these updates can become corrupted,
+or downloads can be incomplete and can cause various issues on installation. The command line tool downloads a fresh .pkg file when executed,
+thus it is probable that the above file caching issue can be avoided. 
+
+
+## How do I get started?
+
+1: Run the software update tool to see what commands are available
+
+{% highlight ruby %}
+
+// Print command usage
+softwareupdate -h
+
+{% endhighlight %}
+
+2: Run the software update tool to see what updates are available for the system
+
+{% highlight ruby %}
+
+// List all available updates
+sudo softwareupdate -l
+
+{% endhighlight %}
+
+3: Run the software update tool and download and apply all updates and then additionally restart the system
+
+{% highlight ruby %}
+
+// Each update specified by args is downloaded, unarchived, and installed.  This command requires root. Then reboot the system
+sudo softwareupdate -i -a -R
+
+{% endhighlight %}
+
+4: Run the software update tool and download and apply only recommended updates and then additionally restart the system
+
+{% highlight ruby %}
+
+// Only recommended updates are downloaded, unarchived, and installed.  This command requires root. Then reboot the system
+sudo softwareupdate -i -r -R
+
+{% endhighlight %}
