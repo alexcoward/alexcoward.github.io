@@ -1,0 +1,92 @@
+---
+layout: post
+title:  "Postman"
+date:   2020-05-01 07:40:50 -0700
+---
+
+## Using Postman To Test An API
+
+<!--break-->
+
+If you are wanting to develop and/or test an API, a great tool to have is an application called Postman. Using Postman you can construct complex 
+HTTP requests quickly and also organize them in collections to share them with your friends and co-workers. This means no more constructing requests using CURL.
+
+You can checkout the website here:
+
+[https://www.postman.com/](https://www.postman.com/)
+
+In this blog post I detail how you can test an API with Postman. I will use the Postman API located at:
+[https://docs.postman-echo.com/?version=latest](https://docs.postman-echo.com/?version=latest)
+
+### With Postman You Can Construct:
+* GET Requests
+* POST Requests
+* PUT Requests
+* DELETE Requests
+* COPY Requests  
+... and a few other request types as well!
+
+You can also add:
+* Headers
+* Authorization
+
+You can also test multiple types of authorization like:
+* OATH
+* API Keys
+* Basic (Username / Pass)
+
+For this example we will:
+* Construct a GET request using Basic Auth to the Postman-echo API
+
+### API Details
+
+The endpoint accepts a default username and password and returns a status code of 200 ok only if the same is provided. 
+Otherwise it will return a status code 401 unauthorized.
+
+
+## How do I get started?
+
+1: Download the app from 
+[https://www.postman.com/](https://www.postman.com/)
+
+2: Create a request
+
+{% highlight ruby %}
+
+Click on "create a request"
+
+Select "GET" as the request type
+
+Enter the URL address of the API: https://postman-echo.com/basic-auth
+
+Click on "Authorization" and select "Basic Auth"
+
+Enter the API username and password to authenticate:
+
+username:postman
+password:password
+
+{% endhighlight %}
+
+2: Observe the response body and status
+
+{% highlight ruby %}
+
+The response body should look like this indicating that the the value of authenticated has been set to true and
+the user postman has successfully authenticated.
+
+{
+    "authenticated": true
+}
+
+The status returned by the server should be 200 OK, indicating that the request has succeeded.
+
+
+{% endhighlight %}
+
+3: You can also experiment with different request types using the Postman-echo API the following request types are accepted
+* GET
+* PUT
+* POST (Form Data + Raw Text)
+* PATCH
+* DELETE
